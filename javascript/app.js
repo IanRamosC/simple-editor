@@ -85,6 +85,15 @@
     }
 
     /**
+     * A function in Rendr (Rendr.getState).
+     * @function getState
+     * @memberof Rendr
+     */
+    function getState() {
+      return JSON.parse(JSON.stringify(state));
+    }
+
+    /**
      * A function in Rendr (Rendr.setRender).
      * @function setRender
      * @param {function} _renderFunc - a function that will be executed everytime state changes
@@ -94,13 +103,43 @@
       render = _renderFunc;
     }
 
+    /**
+     * A function in Rendr (Rendr.elem).
+     * @function elem
+     * @param {string} name - element name
+     * @param {object} attrs - element attributes
+     * @param {node} child - child elements
+     * @memberof Rendr
+     */
+    function elem(name, attrs, node) {
+			var el = document.createElement(name);
+			if(!!node) {
+				el.appendChild(node);
+			}
+
+			for(var key in attrs) {
+				el.setAttribute(key, attrs[key]);
+			}
+
+			return el;
+    }
+
     render(state);
 
     return {
       setState: setState,
-      setRender: setRender
+      getState: getState,
+      setRender: setRender,
+			elem: elem
     };
   })();
+
+  function addImgToCanvas(imgUrl) {
+    var canvas = document.querySelector('.canvas .block');
+    var img = Rendr.elem('img', {src: imgUrl});
+
+    canvas.appendChild(img);
+  }
 
   function createImagesList(imgList) {
     var frag = document.createDocumentFragment();
@@ -113,11 +152,12 @@
   }
 
   function createImagesListItem(imgUrl) {
-    var li = document.createElement('li');
-    var img = document.createElement('img');
+    var li = Rendr.elem('li');
+    var img = Rendr.elem('img', {"src": imgUrl, "class": "img-rounded"});
 
-    img.src = imgUrl;
-    img.className = "img-rounded";
+    img.addEventListener('click', function () {
+			addImgToCanvas(imgUrl);
+		}, false);
 
     li.appendChild(img);
 
@@ -125,10 +165,17 @@
   }
 
   Rendr.setRender(function(state) {
-    var list = document.getElementById('imagesList');
-    list.appendChild(createImagesList(state.imgList));
+    var sideList = document.getElementById('imagesList');
+    var canvas = document.querySelector('.canvas .block');
+
+		sideList.innerHTML = "";
+    sideList.appendChild(createImagesList(state.imgList));
   });
   Rendr.setState({imgList: []});
+
+//	setTimeout(function() {
+//  	Rendr.setState({imgList: Rendr.getState().imgList.concat("http://images.tcdn.com.br/img/img_prod/480766/teste_180_1_20160906114812.jpg")});
+//	}, 5000);
 
   Request.get(ROOT_URL + "/images", function(res) {
     Rendr.setState({imgList: JSON.parse(res)});
