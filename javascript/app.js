@@ -45,8 +45,6 @@
       var xhr = new XMLHttpRequest();
       xhr.open("POST", url, true);
 
-      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-
       xhr.onload = function () {
         if(xhr.readyState === 4) {
           onSuccess(xhr.response);
@@ -173,12 +171,22 @@
   });
   Rendr.setState({imgList: []});
 
-//	setTimeout(function() {
-//  	Rendr.setState({imgList: Rendr.getState().imgList.concat("http://images.tcdn.com.br/img/img_prod/480766/teste_180_1_20160906114812.jpg")});
-//	}, 5000);
-
   Request.get(ROOT_URL + "/images", function(res) {
     Rendr.setState({imgList: JSON.parse(res)});
   });
+
+	var submit = document.getElementById('submit');
+	var file = document.querySelector('[name="upload"]');
+
+	submit.addEventListener('click', function(e) {
+		var fd = new FormData();
+		fd.append("upload", file.files[0]);
+
+		Request.post(ROOT_URL + "/uploads", fd, function(res) {
+			var imgList = Rendr.getState().imgList;
+			var img = JSON.parse(res).file;
+			Rendr.setState({imgList: imgList.concat(img)})
+		});
+	});
 
 })();
