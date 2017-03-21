@@ -49,6 +49,11 @@ html, body {
   box-shadow: 0px 0px 5px black;
 }
 
+.canvas .block img,
+.canvas .block span {
+	position: absolute;
+}
+
 .item {
   border: 1px solid transparent;
   position: absolute;

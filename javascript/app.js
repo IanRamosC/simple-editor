@@ -109,7 +109,7 @@
      * @param {node} child - child elements
      * @memberof Rendr
      */
-    function elem(name, attrs, node) {
+		function elem(name, attrs, node) {
 			var el = document.createElement(name);
 			if(!!node) {
 				el.appendChild(node);
@@ -120,7 +120,7 @@
 			}
 
 			return el;
-    }
+		}
 
     render(state);
 
@@ -134,7 +134,7 @@
 
   function addImgToCanvas(imgUrl) {
     var canvas = document.querySelector('.canvas .block');
-    var img = Rendr.elem('img', {src: imgUrl});
+    var img = Rendr.elem('img', {src: imgUrl, width: 50});
 
     canvas.appendChild(img);
   }
@@ -169,7 +169,10 @@
 		sideList.innerHTML = "";
     sideList.appendChild(createImagesList(state.imgList));
   });
-  Rendr.setState({imgList: []});
+  Rendr.setState({
+		imgList: [],
+		canvasItems: []
+	});
 
   Request.get(ROOT_URL + "/images", function(res) {
     Rendr.setState({imgList: JSON.parse(res)});
