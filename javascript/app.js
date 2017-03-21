@@ -62,4 +62,32 @@
       post: post
     };
   })();
+
+  /**
+   * Rendr
+   * @namespace
+   */
+  var Rendr = (function() {
+    var state = {};
+    var render = function() {};
+    
+    function setState(_state) {
+      for(var key in _state) {
+        state[key] = _state[key];
+      }
+      render(state);
+    }
+
+    function setRender(_renderFunc) {
+      render = _renderFunc;
+    }
+
+    render(state);
+
+    return {
+      setState: setState,
+      setRender: setRender
+    };
+  })();
+
 })();
