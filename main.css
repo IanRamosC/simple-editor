@@ -54,11 +54,16 @@ html, body {
   cursor: move;
 }
 
+.canvas .block span:hover .element-delete {
+  display: block;
+}
+
 .element-delete {
   content: 'X';
 	position: absolute;
   top: -25%;
   left: -25%;
+  display: none;
   padding: 3px 5px 1px;
   background-color: #D91E18;
   color: #FFF;

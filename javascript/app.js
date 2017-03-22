@@ -227,7 +227,7 @@
       el.append(childNode);
 
       el.addEventListener('dragstart', function(e) {
-        var target = (e.target.name === "span") ? e.target : e.target.parentNode;
+        var target = (e.target.nodeName === "SPAN") ? e.target : e.target.parentNode;
         var style = window.getComputedStyle(target, null);
         var dataset = [
           i,
@@ -320,5 +320,4 @@
   var canvas = document.querySelector('.canvas .block');
   canvas.addEventListener('dragover', dragOver, false);
   canvas.addEventListener('drop', drop, false);
-
 })();
