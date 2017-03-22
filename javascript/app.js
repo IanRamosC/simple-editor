@@ -147,23 +147,27 @@
     var img = Rendr.elem('img', {"src": imgUrl, "class": "img-rounded"});
 
     img.addEventListener('click', function () {
-			var items = Rendr.getState().canvasItems;
-			var item = {
-        type: "img",
-        content: imgUrl,
-        top: 0,
-        left: 0,
-        width: img.width,
-        height: img.height
-			};
-
-			Rendr.setState({canvasItems: items.concat(item)});
+      createItemForCanvas("img", imgUrl, img.width, img.height);
 		}, false);
 
     li.appendChild(img);
 
     return li;
   }
+
+  function createItemForCanvas(type, content, width, height) {
+    var items = Rendr.getState().canvasItems;
+    var item = {
+      type: type,
+      content: content,
+      top: 0,
+      left: 0,
+      width: width,
+      height: height
+    };
+
+    Rendr.setState({canvasItems: items.concat(item)});
+  };
 
   function createCanvasItems(items) {
     var frag = document.createDocumentFragment();
@@ -224,5 +228,13 @@
 			Rendr.setState({imgList: imgList.concat(img)})
 		});
 	});
+
+  var addButton = document.getElementById('addText');
+	var text = document.querySelector('[name="canvasText"]');
+
+  addButton.addEventListener('click', function() {
+    createItemForCanvas("text", text.value);
+    text.value = "";
+  });
 
 })();

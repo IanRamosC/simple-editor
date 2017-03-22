@@ -52,6 +52,7 @@ html, body {
 .canvas .block img,
 .canvas .block span {
 	position: absolute;
+  cursor: move;
 }
 
 .item {
