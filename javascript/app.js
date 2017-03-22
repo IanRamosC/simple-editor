@@ -102,6 +102,30 @@
     }
 
     /**
+     * A function in Rendr (Rendr.changeStateItem).
+     * @function changeStateItem
+     * @param {string} itemName - the item name inside state
+     * @param {obj} newItem - the new item that will replace the old item
+     * @param {number} position - a position, if it's an array item that will be replaed
+     * @memberof Rendr
+     */
+    function changeStateItem(itemName, newItem, position) {
+      //Ok, this is not immutable, I'm really sorry for that
+      var newStateItem = getState()[itemName];
+      var newState = {};
+
+      if(!!position) {
+        newStateItem[position] = newItem;
+      } else {
+        newStateItem = newItem;
+      }
+
+      newState[itemName] = newStateItem;
+
+      setState(newState[itemName]);
+    }
+
+    /**
      * A function in Rendr (Rendr.elem).
      * @function elem
      * @param {string} name - element name
@@ -128,6 +152,7 @@
       setState: setState,
       getState: getState,
       setRender: setRender,
+      changeStateItem: changeStateItem,
 			elem: elem
     };
   })();
