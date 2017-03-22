@@ -78,6 +78,10 @@
     function setState(_state) {
       for(var key in _state) {
         state[key] = _state[key];
+
+        if(key === "canvasItems") {
+          localStorage.setItem(key, JSON.stringify(_state[key]));
+        }
       }
       render(state);
     }
@@ -245,7 +249,7 @@
 
   Rendr.setState({
 		imgList: [],
-		canvasItems: []
+		canvasItems: JSON.parse(localStorage.getItem("canvasItems")) || []
 	});
 
   Request.get(ROOT_URL + "/images", function(res) {
