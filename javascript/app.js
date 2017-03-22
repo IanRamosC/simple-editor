@@ -200,28 +200,35 @@
     var frag = document.createDocumentFragment();
 
     items.forEach(function(item, i) {
-      var el;
+      var childNode;
+      var elDelete = Rendr.elem("b", {
+        'class': 'element-delete'
+      }, document.createTextNode("X"));
+
+      var el = Rendr.elem("span", {
+        'data-key': "drag_" + i,
+        'draggable': true,
+        'width': item.width || null,
+        'height': item.height || null,
+        'style': "top: " + item.top + "; left: " + item.left + ";"
+      }, elDelete);
+
       if(item.type === "img") {
-        el = Rendr.elem("img", {
-					'data-key': "drag_" + i,
+        childNode = Rendr.elem("img", {
           'src': item.content,
           'draggable': true,
           'width': item.width || null,
           'height': item.height || null,
-          'style': "top: " + item.top + "; left: " + item.left + ";"
         });
       } else {
-        el = Rendr.elem("span", {
-					'data-key': "drag_" + i,
-          'draggable': true,
-          'width': item.width || null,
-          'height': item.height || null,
-          'style': "top: " + item.top + "; left: " + item.left + ";"
-        });
-        el.textContent = item.content;
+        childNode = document.createTextNode(item.content);
       }
+
+      el.append(childNode);
+
       el.addEventListener('dragstart', function(e) {
-        var style = window.getComputedStyle(e.target, null);
+        var target = (e.target.name === "span") ? e.target : e.target.parentNode;
+        var style = window.getComputedStyle(target, null);
         var dataset = [
           i,
           (parseInt(style.getPropertyValue("left"), 10) - e.clientX),
@@ -229,6 +236,14 @@
         ]
 				event.dataTransfer.setData("text/plain", dataset.join(','));
       }, false);
+
+      elDelete.addEventListener('click', function(e) {
+        var newItems = Rendr.getState().canvasItems.filter(function(_item, _i) {
+          // returning all elements that aren't the current element.
+          return _i !== i;
+        });
+        Rendr.setState({canvasItems: newItems});
+      });
 
       frag.appendChild(el);
     });
