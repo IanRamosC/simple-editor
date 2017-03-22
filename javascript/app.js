@@ -147,7 +147,7 @@
     var img = Rendr.elem('img', {"src": imgUrl, "class": "img-rounded"});
 
     img.addEventListener('click', function () {
-      createItemForCanvas("img", imgUrl, img.width, img.height);
+      createItemForCanvas("img", imgUrl, img.width);
 		}, false);
 
     li.appendChild(img);
@@ -172,23 +172,39 @@
   function createCanvasItems(items) {
     var frag = document.createDocumentFragment();
 
-    items.forEach(function(item) {
+    items.forEach(function(item, i) {
       var el;
       if(item.type === "img") {
         el = Rendr.elem("img", {
-          src: item.content,
-          width: item.width,
-          height: item.height,
-          style: "top: " + item.top + "; left: " + item.left + ";"
+					'data-key': "drag_" + i,
+          'src': item.content,
+          'draggable': true,
+          'width': item.width || null,
+          'height': item.height || null,
+          'style': "top: " + item.top + "; left: " + item.left + ";"
         });
       } else {
         el = Rendr.elem("span", {
-          width: item.width,
-          height: item.height,
-          style: "top: " + item.top + "; left: " + item.left + ";"
+					'data-key': "drag_" + i,
+          'draggable': true,
+          'width': item.width || null,
+          'height': item.height || null,
+          'style': "top: " + item.top + "; left: " + item.left + ";"
         });
         el.textContent = item.content;
       }
+      el.addEventListener('dragstart', function(e) {
+				var style = window.getComputedStyle(e.target, null);
+				var dataset = [
+          "drag_" + i,
+          (parseInt(style.getPropertyValue("left"), 10) - e.clientX),
+          (parseInt(style.getPropertyValue("top"), 10) - e.clientY)
+        ]
+				event.dataTransfer.setData("text/plain", dataset.join(','));
+        //e.target.style.top = (e.layerY - ) + "px";
+        //e.target.style.left = (e.layerX ) + "px";
+        console.log(e);
+      }, false);
 
       frag.appendChild(el);
     });
@@ -236,5 +252,25 @@
     createItemForCanvas("text", text.value);
     text.value = "";
   });
+
+  function dragOver(e) {
+    e.preventDefault();
+    return false;
+  }
+
+  function drop(e) {
+		var offset = event.dataTransfer.getData("text/plain").split(',');
+		var el = document.querySelector('[data-key="' + offset[0] + '"]');
+    el.style.left = (event.clientX + parseInt(offset[1], 10)) + 'px';
+    el.style.top = (event.clientY + parseInt(offset[2], 10)) + 'px';
+
+    event.preventDefault();
+
+    return false;
+  }
+
+  var canvas = document.querySelector('.canvas .block');
+  canvas.addEventListener('dragover', dragOver, false);
+  canvas.addEventListener('drop', drop, false);
 
 })();
