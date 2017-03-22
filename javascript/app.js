@@ -9,7 +9,7 @@
    * Request
    * @namespace
    */
-  var Request = (function() {
+   var Request = (function() {
     /**
      * A function in request (request.get).
      * @function get
@@ -137,25 +137,25 @@
      * @param {node} child - child elements
      * @memberof Rendr
      */
-		function elem(name, attrs, node) {
-			var el = document.createElement(name);
-			if(!!node) {
-				el.appendChild(node);
-			}
+    function elem(name, attrs, node) {
+      var el = document.createElement(name);
+      if(!!node) {
+        el.appendChild(node);
+      }
 
-			for(var key in attrs) {
-				el.setAttribute(key, attrs[key]);
-			}
+      for(var key in attrs) {
+        el.setAttribute(key, attrs[key]);
+      }
 
-			return el;
-		}
+      return el;
+    }
 
     return {
       setState: setState,
       getState: getState,
       setRender: setRender,
       changeStateItem: changeStateItem,
-			elem: elem
+      elem: elem
     };
   })();
 
@@ -175,7 +175,7 @@
 
     img.addEventListener('click', function () {
       createItemForCanvas("img", imgUrl, img.width);
-		}, false);
+    }, false);
 
     li.appendChild(img);
 
@@ -230,11 +230,11 @@
         var target = (e.target.nodeName === "SPAN") ? e.target : e.target.parentNode;
         var style = window.getComputedStyle(target, null);
         var dataset = [
-          i,
-          (parseInt(style.getPropertyValue("left"), 10) - e.clientX),
-          (parseInt(style.getPropertyValue("top"), 10) - e.clientY)
+        i,
+        (parseInt(style.getPropertyValue("left"), 10) - e.clientX),
+        (parseInt(style.getPropertyValue("top"), 10) - e.clientY)
         ]
-				event.dataTransfer.setData("text/plain", dataset.join(','));
+        event.dataTransfer.setData("text/plain", dataset.join(','));
       }, false);
 
       elDelete.addEventListener('click', function(e) {
@@ -255,7 +255,7 @@
     var sideList = document.getElementById('imagesList');
     var canvas = document.querySelector('.canvas .block');
 
-		sideList.innerHTML = "";
+    sideList.innerHTML = "";
     sideList.appendChild(createImagesList(state.imgList));
 
     canvas.innerHTML = "";
@@ -263,30 +263,30 @@
   });
 
   Rendr.setState({
-		imgList: [],
-		canvasItems: JSON.parse(localStorage.getItem("canvasItems")) || []
-	});
+    imgList: [],
+    canvasItems: JSON.parse(localStorage.getItem("canvasItems")) || []
+  });
 
   Request.get(ROOT_URL + "/images", function(res) {
     Rendr.setState({imgList: JSON.parse(res)});
   });
 
-	var submit = document.getElementById('submit');
-	var file = document.querySelector('[name="upload"]');
+  var submit = document.getElementById('submit');
+  var file = document.querySelector('[name="upload"]');
 
-	submit.addEventListener('click', function(e) {
-		var fd = new FormData();
-		fd.append("upload", file.files[0]);
+  submit.addEventListener('click', function(e) {
+    var fd = new FormData();
+    fd.append("upload", file.files[0]);
 
-		Request.post(ROOT_URL + "/uploads", fd, function(res) {
-			var imgList = Rendr.getState().imgList;
-			var img = JSON.parse(res).file;
-			Rendr.setState({imgList: imgList.concat(img)})
-		});
-	});
+    Request.post(ROOT_URL + "/uploads", fd, function(res) {
+     var imgList = Rendr.getState().imgList;
+     var img = JSON.parse(res).file;
+     Rendr.setState({imgList: imgList.concat(img)})
+   });
+  });
 
   var addButton = document.getElementById('addText');
-	var text = document.querySelector('[name="canvasText"]');
+  var text = document.querySelector('[name="canvasText"]');
 
   addButton.addEventListener('click', function() {
     createItemForCanvas("text", text.value);
@@ -300,9 +300,9 @@
 
   function drop(e) {
     event.preventDefault();
-		var offset = e.dataTransfer.getData("text/plain").split(',');
+    var offset = e.dataTransfer.getData("text/plain").split(',');
     var key = offset[0];
-		var el = document.querySelector('[data-key="drag_' + key + '"]');
+    var el = document.querySelector('[data-key="drag_' + key + '"]');
     var left = (e.clientX + parseInt(offset[1], 10)) + 'px';
     var top = (e.clientY + parseInt(offset[2], 10)) + 'px';
 
