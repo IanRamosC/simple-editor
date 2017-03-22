@@ -132,13 +132,6 @@
     };
   })();
 
-  function addImgToCanvas(imgUrl) {
-    var canvas = document.querySelector('.canvas .block');
-    var img = Rendr.elem('img', {src: imgUrl, width: 50});
-
-    canvas.appendChild(img);
-  }
-
   function createImagesList(imgList) {
     var frag = document.createDocumentFragment();
 
@@ -154,12 +147,49 @@
     var img = Rendr.elem('img', {"src": imgUrl, "class": "img-rounded"});
 
     img.addEventListener('click', function () {
-			addImgToCanvas(imgUrl);
+			var items = Rendr.getState().canvasItems;
+			var item = {
+        type: "img",
+        content: imgUrl,
+        top: 0,
+        left: 0,
+        width: img.width,
+        height: img.height
+			};
+
+			Rendr.setState({canvasItems: items.concat(item)});
 		}, false);
 
     li.appendChild(img);
 
     return li;
+  }
+
+  function createCanvasItems(items) {
+    var frag = document.createDocumentFragment();
+
+    items.forEach(function(item) {
+      var el;
+      if(item.type === "img") {
+        el = Rendr.elem("img", {
+          src: item.content,
+          width: item.width,
+          height: item.height,
+          style: "top: " + item.top + "; left: " + item.left + ";"
+        });
+      } else {
+        el = Rendr.elem("span", {
+          width: item.width,
+          height: item.height,
+          style: "top: " + item.top + "; left: " + item.left + ";"
+        });
+        el.textContent = item.content;
+      }
+
+      frag.appendChild(el);
+    });
+
+    return frag;
   }
 
   Rendr.setRender(function(state) {
@@ -168,7 +198,10 @@
 
 		sideList.innerHTML = "";
     sideList.appendChild(createImagesList(state.imgList));
+
+    canvas.appendChild(createCanvasItems(state.canvasItems));
   });
+
   Rendr.setState({
 		imgList: [],
 		canvasItems: []
