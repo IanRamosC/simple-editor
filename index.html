@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Canvas</title>
+  <link rel="stylesheet" type="text/css" href="bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="main.css">
+</head>
+<body>
+<!-- side pane -->
+<div class="sidepane col-sm-2 col-md-2 col-lg-2">
+  <div class="form">
+    <h3>Form</h3>
+      <input type="file" class="form-control" placeholder="Upload Your Images" name="upload">
+      <button id="submit" class="btn btn-default">upload</button>
+    <!-- Upload Form here -->
+  </div>
+  <hr />
+  <div class="assets">
+    <h3>Assets</h3>
+    <div class="text">
+        <h4>Text</h4>
+        <input type="text" name="canvasText" class="form-control">
+        <button id="addText" class="btn btn-default">Add Text</button>
+    </div>
+    <div class="image">
+        <h4>Images</h4>
+        <ul id="imagesList" class="list-unstyled">
+            <!-- List of images here -->
+            <!-- <li><img src="images/sample.png" class="img-rounded" /></li> -->
+        </ul>
+    </div>
+  </div>
+</div>
+<!-- canvas -->
+<div class="canvas col-sm-8 col-md-8 col-lg-8">
+    <div class="block">
+        <!-- Add images and texts to here -->
+    </div>
+</div>
+
+<script src="javascript/app.js"></script>
+</body>
+</html>
