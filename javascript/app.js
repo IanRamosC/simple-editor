@@ -122,7 +122,7 @@
 
       newState[itemName] = newStateItem;
 
-      setState(newState[itemName]);
+      setState(newState);
     }
 
     /**
@@ -145,8 +145,6 @@
 
 			return el;
 		}
-
-    render(state);
 
     return {
       setState: setState,
@@ -219,16 +217,13 @@
         el.textContent = item.content;
       }
       el.addEventListener('dragstart', function(e) {
-				var style = window.getComputedStyle(e.target, null);
-				var dataset = [
-          "drag_" + i,
+        var style = window.getComputedStyle(e.target, null);
+        var dataset = [
+          i,
           (parseInt(style.getPropertyValue("left"), 10) - e.clientX),
           (parseInt(style.getPropertyValue("top"), 10) - e.clientY)
         ]
 				event.dataTransfer.setData("text/plain", dataset.join(','));
-        //e.target.style.top = (e.layerY - ) + "px";
-        //e.target.style.left = (e.layerX ) + "px";
-        console.log(e);
       }, false);
 
       frag.appendChild(el);
@@ -244,6 +239,7 @@
 		sideList.innerHTML = "";
     sideList.appendChild(createImagesList(state.imgList));
 
+    canvas.innerHTML = "";
     canvas.appendChild(createCanvasItems(state.canvasItems));
   });
 
@@ -284,12 +280,20 @@
   }
 
   function drop(e) {
-		var offset = event.dataTransfer.getData("text/plain").split(',');
-		var el = document.querySelector('[data-key="' + offset[0] + '"]');
-    el.style.left = (event.clientX + parseInt(offset[1], 10)) + 'px';
-    el.style.top = (event.clientY + parseInt(offset[2], 10)) + 'px';
-
     event.preventDefault();
+		var offset = e.dataTransfer.getData("text/plain").split(',');
+    var key = offset[0];
+		var el = document.querySelector('[data-key="drag_' + key + '"]');
+    var left = (e.clientX + parseInt(offset[1], 10)) + 'px';
+    var top = (e.clientY + parseInt(offset[2], 10)) + 'px';
+
+    el.style.left = left;
+    el.style.top = top;
+
+    var newItem = Rendr.getState().canvasItems[key];
+    newItem.top = top;
+    newItem.left = left;
+    Rendr.changeStateItem("canvasItems", newItem, key);
 
     return false;
   }
